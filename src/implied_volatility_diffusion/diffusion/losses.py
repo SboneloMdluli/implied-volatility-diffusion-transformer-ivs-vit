@@ -59,11 +59,10 @@ class DiffusionLossConfig:
     arbitrage_schedule: ArbitrageSchedule = "alpha_bar"
 
     predicted_z0_clip: tuple[float, float] | None = (-4.0, 4.0)
-    # Legacy x0-only SNR weights when ``eps_loss_schedule == "uniform"``.
+    # x0-only SNR weights
     snr_weighting: bool = False
 
     smoothness_lambda: float = 1e-4
-    # Same schedule vocabulary as arbitrage; uses `_arbitrage_weights`.
     smoothness_schedule: ArbitrageSchedule = "alpha_bar"
 
     timestep_sampling: TimestepSampling = "uniform"
@@ -148,6 +147,13 @@ class DiffusionLoss(nn.Module):
 
         z_t, z0, eps = model.add_noise(iv0, t, noise=noise)
 
+        # Collect VQ-VAE training losses (commitment + entropy) when a MAGViT-v2
+
+        vq_losses: dict[str, torch.Tensor] = {}
+        if getattr(model, "_vq_losses", None):
+            vq_losses = dict(model._vq_losses)
+            model._vq_losses = {}
+
         pred = model.predict_noise(z_t, t, cond)
         target = eps if model.prediction_type == "epsilon" else z0
         per_sample_mse = ((pred - target) ** 2).flatten(1).mean(dim=1)
@@ -156,6 +162,11 @@ class DiffusionLoss(nn.Module):
 
         out: dict[str, torch.Tensor] = {"loss_eps": loss_eps}
         loss_total = loss_eps
+
+        # Add VQ-VAE commitment and entropy losses
+        for k, v in vq_losses.items():
+            out[k] = v
+            loss_total = loss_total + v
 
         arb_on = self.arbitrage_penalty is not None and self.config.arbitrage_lambda > 0.0
         smooth_on = self.config.smoothness_lambda > 0.0

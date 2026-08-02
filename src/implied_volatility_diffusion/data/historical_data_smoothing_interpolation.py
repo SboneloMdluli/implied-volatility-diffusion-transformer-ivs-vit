@@ -680,7 +680,7 @@ def make_smile_slices_figure(stages: HistoricSurfaceStages, num_slices: int = 5)
         n = tau_axis.size
         idx = [int(round(i * (n - 1) / (num_slices - 1))) for i in range(num_slices)]
         for j in idx:
-            ax.plot(x_axis, Z[:, j], marker="o", ms=3, lw=1.0, label=rf"$\tau={tau_axis[j]:.3f}$")
+            ax.plot(x_axis, Z[:, j], marker="o", ms=3, lw=1.0, label=rf"$\tau={tau_axis[j]:.2f}$")
         ax.set_xlabel("k = log(K/S)")
         ax.set_title(title, fontsize=10)
         ax.grid(True, alpha=0.35)
@@ -806,7 +806,7 @@ def make_surface_comparison_3d_figure(
     fig = plt.figure(figsize=(16, 5.6))
     fig.suptitle(
         f"IV surface - 3D ({title_date}, n quotes = {n_quotes}, "
-        f"raw mean σ = {s['iv_raw_mean']:.3f}, smoothed mean σ = {s['smoothed_mean']:.3f})",
+        f"raw mean σ = {s['iv_raw_mean']:.2f}, smoothed mean σ = {s['smoothed_mean']:.2f})",
         fontsize=12,
     )
 
@@ -833,7 +833,7 @@ def make_surface_comparison_3d_figure(
         vmax=iv_vmax,
     )
     ax1.set_title(
-        f"Raw quotes (p99 σ = {s['iv_raw_p99']:.3f})",
+        f"Raw quotes (p99 σ = {s['iv_raw_p99']:.2f})",
         fontsize=10,
     )
     _label_3d(ax1, r"$\sigma_{\mathrm{imp}}$", zlim=(iv_vmin, iv_vmax))
@@ -911,7 +911,7 @@ def make_surface_comparison_heatmap_figure(
     fig = plt.figure(figsize=(16, 5.0))
     fig.suptitle(
         f"IV surface - heatmap ({title_date}, n quotes = {n_quotes}, "
-        f"raw mean σ = {s['iv_raw_mean']:.3f}, smoothed mean σ = {s['smoothed_mean']:.3f})",
+        f"raw mean σ = {s['iv_raw_mean']:.2f}, smoothed mean σ = {s['smoothed_mean']:.2f})",
         fontsize=12,
     )
 
@@ -933,7 +933,7 @@ def make_surface_comparison_heatmap_figure(
         vmax=iv_vmax,
     )
     axh1.set_title(
-        f"Raw quotes (p99 σ = {s['iv_raw_p99']:.3f})",
+        f"Raw quotes (p99 σ = {s['iv_raw_p99']:.2f})",
         fontsize=10,
     )
     _label_heat(axh1)
@@ -1045,14 +1045,14 @@ def save_historic_pipeline_report_pdf(
         f"Quotes used      : {len(stages.day_sub)}",
         "",
         "Smoothing grid   : "
-        f"k in [{stages.x_grid_smooth[0]:.3f}, {stages.x_grid_smooth[-1]:.3f}] "
+        f"k in [{stages.x_grid_smooth[0]:.2f}, {stages.x_grid_smooth[-1]:.2f}] "
         f"({stages.x_grid_smooth.size} pts), "
-        f"tau in [{stages.tau_grid_smooth[0]:.3f}, {stages.tau_grid_smooth[-1]:.3f}] "
+        f"tau in [{stages.tau_grid_smooth[0]:.2f}, {stages.tau_grid_smooth[-1]:.2f}] "
         f"({stages.tau_grid_smooth.size} pts)",
         "Unified grid     : "
-        f"k in [{grid.log_moneyness[0]:.3f}, {grid.log_moneyness[-1]:.3f}] "
+        f"k in [{grid.log_moneyness[0]:.2f}, {grid.log_moneyness[-1]:.2f}] "
         f"({grid.log_moneyness.size} pts), "
-        f"tau in [{grid.tau[0]:.3f}, {grid.tau[-1]:.3f}] ({grid.tau.size} pts)",
+        f"tau in [{grid.tau[0]:.2f}, {grid.tau[-1]:.2f}] ({grid.tau.size} pts)",
         "",
         f"NaN cells after smoothing only           : {filled_nan_count} / {total_cells}",
         f"Finite cells on unified grid (after fill): {coverage_after:.1%}",

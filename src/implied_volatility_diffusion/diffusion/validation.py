@@ -87,7 +87,7 @@ def plot_surface_comparison(
     input_surface: np.ndarray,
     ground_truth_surface: np.ndarray,
     forecast_surface: np.ndarray,
-    moneyness: np.ndarray,
+    log_moneyness: np.ndarray,
     tau: np.ndarray,
     title: str | None = None,
 ) -> tuple[plt.Figure, np.ndarray]:
@@ -101,13 +101,13 @@ def plot_surface_comparison(
     vmax = float(np.nanmax([inp.max(), gt.max(), pred.max()]))
     dmax = float(np.nanmax(np.abs(diff)))
 
-    fig, axes = plt.subplots(1, 4, figsize=(18, 4.2), constrained_layout=True)
+    fig, axes = plt.subplots(1, 4, figsize=(20.0, 5.0))
     mats = (inp, gt, pred, diff)
     names = ("Input", "Ground truth", "Forecast", "Forecast - truth")
     cmaps = ("viridis", "viridis", "viridis", "coolwarm")
     limits = ((vmin, vmax), (vmin, vmax), (vmin, vmax), (-dmax, dmax))
 
-    extent = (float(moneyness[0]), float(moneyness[-1]), float(tau[0]), float(tau[-1]))
+    extent = (float(log_moneyness[0]), float(log_moneyness[-1]), float(tau[0]), float(tau[-1]))
     for ax, mat, name, cmap, (lo, hi) in zip(axes, mats, names, cmaps, limits, strict=False):
         image = ax.imshow(
             mat.T,
@@ -119,12 +119,13 @@ def plot_surface_comparison(
             vmax=hi,
         )
         ax.set_title(name)
-        ax.set_xlabel("Moneyness")
+        ax.set_xlabel(r"Log-moneyness $k=\log(K/S)$")
         ax.set_ylabel("Tenor (years)")
-        fig.colorbar(image, ax=ax, fraction=0.046, pad=0.02)
+        fig.colorbar(image, ax=ax, fraction=0.046, pad=0.04)
 
     if title:
-        fig.suptitle(title, fontsize=12)
+        fig.suptitle(title, fontsize=12, y=0.98)
+    fig.subplots_adjust(left=0.05, right=0.99, bottom=0.14, top=0.88, wspace=0.42)
     return fig, axes
 
 
@@ -152,7 +153,7 @@ def plot_performance_metrics(
     labels = [str(x) for x in rmse_mean.index]
     x = np.arange(len(labels))
 
-    fig, axes = plt.subplots(1, 3, figsize=(16, 4.4), constrained_layout=True)
+    fig, axes = plt.subplots(1, 3, figsize=(16.5, 4.8))
 
     width = 0.38
     axes[0].bar(x - width / 2, rmse_mean.values, width=width, label="RMSE", color="#1f77b4")
@@ -173,6 +174,7 @@ def plot_performance_metrics(
     axes[2].set_title("Mean generation attempts")
     axes[2].set_ylabel("Attempts")
 
+    fig.subplots_adjust(left=0.07, right=0.99, bottom=0.16, top=0.90, wspace=0.32)
     return fig, axes
 
 

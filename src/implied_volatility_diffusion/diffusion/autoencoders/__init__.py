@@ -1,9 +1,5 @@
 """Autoencoder-related diffusion modules."""
 
-from implied_volatility_diffusion.diffusion.autoencoders.kl_autoencoder import (
-    KLAutoencoder,
-    KLAutoencoderOutput,
-)
 from implied_volatility_diffusion.diffusion.autoencoders.latent_blocks import (
     DownBlock,
     UpBlock,
@@ -19,11 +15,15 @@ from implied_volatility_diffusion.diffusion.autoencoders.latent_grid import (
     pad_surface,
     symmetric_pad_widths,
 )
+from implied_volatility_diffusion.diffusion.autoencoders.magvit_vqvae import (
+    MAGViTv2VQVAE,
+    MAGViTv2VQVAEOutput,
+)
 
 __all__ = [
     "DownBlock",
-    "KLAutoencoder",
-    "KLAutoencoderOutput",
+    "MAGViTv2VQVAE",
+    "MAGViTv2VQVAEOutput",
     "UpBlock",
     "crop_tensor",
     "crop_surface",

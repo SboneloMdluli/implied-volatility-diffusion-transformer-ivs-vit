@@ -24,6 +24,7 @@ dependencies = [
   "pyarrow>=23.0.1",
   "QuantLib>=1.36",
   "py-lets-be-rational>=1.0.1",
+  "diffusers>=0.30",
 ]
 
 [dependency-groups]
@@ -37,6 +38,7 @@ dev = [
 notebooks = [
   "ipykernel>=6.29",
   "jupyterlab>=4.0",
+  "plotnine>=0.13",
   "seaborn>=0.13",
   "tqdm>=4.67.3"
 ]
