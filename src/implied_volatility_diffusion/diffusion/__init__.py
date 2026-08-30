@@ -9,6 +9,11 @@ from implied_volatility_diffusion.diffusion.autoencoders.magvit_vqvae import (
     MAGViTv2VQVAE,
     MAGViTv2VQVAEOutput,
 )
+from implied_volatility_diffusion.diffusion.autoencoders.vqvae_trainer import (
+    VQVAELoss,
+    load_vqvae_checkpoint,
+    save_vqvae_checkpoint,
+)
 from implied_volatility_diffusion.diffusion.autoencoders.latent_grid import (
     crop_surface,
     halving_spatial_factor,
@@ -56,6 +61,9 @@ __all__ = [
     "MAGViTv2VQVAE",
     "MAGViTv2VQVAEOutput",
     "ReverseDiffusion",
+    "VQVAELoss",
+    "load_vqvae_checkpoint",
+    "save_vqvae_checkpoint",
     "SinusoidalTimeEmbedding",
     "SurfaceGenerationDiagnostics",
     "TimeEmbeddingMLP",

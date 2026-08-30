@@ -2,13 +2,16 @@
 
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass
 
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from diffusers import VQModel
+os.environ.setdefault("DIFFUSERS_VERBOSITY", "error")
+
+from diffusers.models.autoencoders.vq_model import VQModel
 
 from implied_volatility_diffusion.diffusion.autoencoders.latent_blocks import crop_tensor, pad_tensor
 from implied_volatility_diffusion.diffusion.autoencoders.latent_grid import halving_spatial_factor
@@ -58,8 +61,8 @@ class MAGViTv2VQVAE(nn.Module):
             scaling_factor=1.0,
         )
 
-        self.vq_model.quantize.beta = float(commitment_weight)
-        self._num_downsample = int(num_downsample)
+        self.vq_model.quantize.beta = commitment_weight
+        self._num_downsample = num_downsample
 
     @property
     def latent_channels(self) -> int:

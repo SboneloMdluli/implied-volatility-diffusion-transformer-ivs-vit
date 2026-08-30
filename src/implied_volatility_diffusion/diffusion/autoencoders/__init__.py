@@ -19,19 +19,27 @@ from implied_volatility_diffusion.diffusion.autoencoders.magvit_vqvae import (
     MAGViTv2VQVAE,
     MAGViTv2VQVAEOutput,
 )
+from implied_volatility_diffusion.diffusion.autoencoders.vqvae_trainer import (
+    VQVAELoss,
+    load_vqvae_checkpoint,
+    save_vqvae_checkpoint,
+)
 
 __all__ = [
     "DownBlock",
     "MAGViTv2VQVAE",
     "MAGViTv2VQVAEOutput",
     "UpBlock",
+    "VQVAELoss",
     "crop_tensor",
     "crop_surface",
     "groupnorm",
     "halving_spatial_factor",
     "latent_padded_hw",
     "latent_spatial_hw",
+    "load_vqvae_checkpoint",
     "pad_tensor",
     "pad_surface",
+    "save_vqvae_checkpoint",
     "symmetric_pad_widths",
 ]
