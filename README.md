@@ -1,56 +1,66 @@
 # Implied Volatility Diffusion
 
-`implied-volatility-diffusion` is a research codebase for building, validating, and modeling implied-volatility surfaces (IVS) primarily using diffusion models.
+Modelling implied-volatility surfaces (IVS) with conditional diffusion models. U-Net and transformer denoisers, optional VQ-VAE latent encoding, DDIM sampling, Heston/SABR synthetic surfaces, and no-arbitrage diagnostics.
 
-## Quick Start
+## Forward process
 
-### 1) Install dependencies
+VP forward process on the SPX IVS from 2023-05-11, in normalized log-IV space. Left is the clean surface; right is pure Gaussian noise at $t = T = 600$.
 
-With [uv](https://github.com/astral-sh/uv):
+![VP forward process](assets/forward_process.png)
 
-```bash
-uv sync
-```
+## Generation
 
-For notebook workflows:
+DDIM reverse process — from noise back to a generated IV surface.
 
-```bash
-uv sync --group notebooks
-```
+**U-Net (raw log-IV space)**
 
-### 2) Run tests
+![DDIM reverse process, U-Net](assets/ddim_reverse_process_unet.png)
 
-```bash
-uv run pytest
-```
+**U-Net + VQ-VAE (quantized latent)**
 
-### 3) Run pre-commit checks
+![DDIM reverse process, U-Net + VQ-VAE](assets/ddim_reverse_process_vqvae.png)
 
-```bash
-uv run pre-commit run --all-files
-```
+## Visual validation
 
-## Project Layout
+Conditional one-day forecast on historical SPX surfaces. Columns: mean market surface, mean generated surface, residual.
 
-- `src/implied_volatility_diffusion/`: package code (models, pricing, synthetic surfaces, data utilities).
-- `config/`: YAML configs for synthetic surface generation and shared grids.
-- `notebooks/`: exploratory and reproducible research notebooks (`data/`, `synthetic/`, `training/`, `validation/`, `diagnostics/`).
-- `data/`: raw and processed datasets.
-- `docs/`: focused technical documentation.
+**U-Net**
 
-## System architecture
+![Forecast heatmaps, U-Net](assets/conditional_forecast_heatmap_unet.png)
+
+**U-Net with VQ-VAE**
+
+![Forecast heatmaps, U-Net + VQ-VAE](assets/conditional_forecast_heatmap_vqvae.png)
+
+## Architecture
 
 [![System architecture diagram](assets/syst_diag.svg)](assets/syst_diag.svg)
 
-## Configuration
+## Installation
 
-- `[config/heston_iv_surface.yaml](config/heston_iv_surface.yaml)`: Heston market assumptions, parameter ranges, LHS, COS settings, and IV inversion settings.
-- `[config/sabr_iv_surface.yaml](config/sabr_iv_surface.yaml)`: SABR market assumptions, parameter ranges, LHS, and grid settings.
-- `[config/iv_surface_grid.yaml](config/iv_surface_grid.yaml)`: shared moneyness/maturity grid and plotting defaults.
+```bash
+uv sync
+uv sync --group notebooks
+```
 
-## Documentation
+```bash
+uv run pytest
+uv run pre-commit run --all-files
+```
 
-- `[docs/heston_surface_generation.md](docs/heston_surface_generation.md)`: Heston synthetic IV surface generation flow and outputs.
-- `[docs/sabr_surface_generation.md](docs/sabr_surface_generation.md)`: SABR baseline generation and calibration flow.
-- `[docs/option_data_pipeline.md](docs/option_data_pipeline.md)`: historical option-data ingestion, cleaning, and feature engineering pipeline.
-- `[docs/sabr_interpolation.md](docs/sabr_interpolation.md)`: SABR interpolation walkthrough on market data.
+## Layout
+
+| Path | What's inside |
+|---|---|
+| `src/implied_volatility_diffusion/` | models, pricing, synthetic surfaces, data utils |
+| `config/` | YAML configs for surface generation and shared grids |
+| `notebooks/` | research notebooks — `data/`, `synthetic/`, `training/`, `validation/`, `diagnostics/` |
+| `data/` | raw and processed datasets |
+| `docs/` | technical writeups |
+
+## Docs
+
+- [Heston surface generation](docs/heston_surface_generation.md)
+- [SABR surface generation](docs/sabr_surface_generation.md)
+- [Option data pipeline](docs/option_data_pipeline.md)
+- [SABR interpolation](docs/sabr_interpolation.md)
